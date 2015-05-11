@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<input id="msginput" disabled placeholder="Your message here">
+
+<div id="msglist">
+</div>
+
+<script language="javascript" type="text/javascript">
+websocket = new WebSocket("ws://localhost:8765/");
+msginput = document.getElementById("msginput");
+
+websocket.onopen = function(e) {
+  msginput.disabled = false;
+  msginput.focus();
+};
+
+websocket.onclose = function(e) {
+  msginput.disabled = true;
+};
+
+websocket.onmessage = function(e) {
+  var msg = document.createElement("p");
+  msg.innerHTML = e.data;
+  msg_list = document.getElementById("msglist");
+  msg_list.insertBefore(msg, msg_list.firstChild);
+};
+  websocket.onerror = function(e) { alert(e); };
+
+msginput.onkeydown = function(e) {
+  if (e.keyCode == 13) {
+    websocket.send(msginput.value);
+    msginput.value = "";
+  }
+}
+ 
+</script>

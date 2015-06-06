@@ -10,7 +10,12 @@ def welcome_msg():
     return "Welcome from server! Time now: {}".format(
             datetime.datetime.now().strftime('%H:%M:%S'))
 
+
+
 sockets = []
+
+
+
 
 @asyncio.coroutine
 def hello(websocket, path):
@@ -25,6 +30,9 @@ def hello(websocket, path):
             yield from s.send("New message: " + msg)
 
     sockets.remove(websocket)
+
+
+
 
 server = websockets.serve(hello, 'localhost', 8765)
 asyncio.get_event_loop().run_until_complete(server)

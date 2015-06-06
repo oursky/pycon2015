@@ -17,11 +17,17 @@ def welcome_msg():
 #        yield from websocket.send(welcome_msg())
 #        yield from asyncio.sleep(1)
 
+
+
+
 @asyncio.coroutine
 def hello(websocket, path):
     while True:
         yield from websocket.send(welcome_msg())
         time.sleep(5) #FIXME
+
+
+
 
 server = websockets.serve(hello, 'localhost', 8765)
 asyncio.get_event_loop().run_until_complete(server)

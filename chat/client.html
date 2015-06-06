@@ -12,19 +12,26 @@ msginput = document.getElementById("msginput");
 websocket.onopen = function(e) {
   msginput.disabled = false;
   msginput.focus();
+  showMessage('Connected!')
 };
 
 websocket.onclose = function(e) {
   msginput.disabled = true;
+  showMessage('Disconnected!')
 };
 
-websocket.onmessage = function(e) {
+function showMessage(msg_text) {
   var msg = document.createElement("p");
-  msg.innerHTML = e.data;
+  msg.innerHTML = msg_text;
   msg_list = document.getElementById("msglist");
   msg_list.insertBefore(msg, msg_list.firstChild);
+}
+
+websocket.onmessage = function(e) {
+  showMessage(e.data);
 };
-  websocket.onerror = function(e) { alert(e); };
+
+websocket.onerror = function(e) { alert(e); };
 
 msginput.onkeydown = function(e) {
   if (e.keyCode == 13) {

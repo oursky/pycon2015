@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
 import asyncio
-import websockets
 import datetime
+import websockets
 
 
-ANNOUNCE_TIME_INTERVAL = 1
+ANNOUNCE_TIME_INTERVAL = 30
 
 
 """

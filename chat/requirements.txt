@@ -1,1 +1,2 @@
 websockets==2.4
+aiohttp==0.15.3

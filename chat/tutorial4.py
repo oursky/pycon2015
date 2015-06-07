@@ -19,6 +19,34 @@ sockets = []
 
 
 @asyncio.coroutine
+def cat_html():
+    # Fetch cat html with image asynchronously
+    resp = yield from aiohttp.request('GET',
+            'http://thecatapi.com/api/images/get?format=html')
+    return (yield from resp.text())
+
+
+
+
+@asyncio.coroutine
+def handle_msg(websocket, msg):
+    # Find cat if client asked for `cat`
+    if msg == 'cat':
+        yield from websocket.send("Your cat is on the way.")
+        output = yield from cat_html()
+    else:
+        output = "New message: " + msg
+
+    # Broadcast `output` to all clients
+    for s in sockets:
+        yield from s.send(output)
+
+
+
+
+
+
+@asyncio.coroutine
 def hello(websocket, path):
     yield from websocket.send(welcome_msg())
     sockets.append(websocket)
@@ -27,33 +55,8 @@ def hello(websocket, path):
         if msg is None:
             break
         msg = cgi.escape(msg)
-
-
-
-
-        if msg == 'cat':
-            # Send a cat image
-            yield from websocket.send("Your cat is on the way.")
-            html = yield from cat_html()
-            for s in sockets:
-                yield from s.send(html)
-        else:
-            for s in sockets:
-                yield from s.send("New message: " + msg)
-
-
-
-
+        yield from handle_msg(websocket, msg)
     sockets.remove(websocket)
-
-
-
-
-@asyncio.coroutine
-def cat_html():
-    resp = yield from aiohttp.request('GET',
-            'http://thecatapi.com/api/images/get?format=html')
-    return (yield from resp.text())
 
 
 
